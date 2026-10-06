@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio — Alan Guillet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+/* =========================================================
+   PORTFOLIO CYBERSÉCURITÉ
+   Inspiré de la mise en page de Genus Watches :
+   sur-titres fins en majuscules, grands titres sur 2 lignes,
+   blocs image/texte alternés, apparitions au défilement.
+   ✏️ Pour changer les couleurs, modifie juste les variables ci-dessous.
+   ========================================================= */
+
+:root {
+  --bg: #05080d;
+  --bg-2: #0a0f17;
+  --card: rgba(14, 22, 32, 0.75);
+  /* ✏️ Couleurs principales (valeurs R, G, B) */
+  --a-rgb: 90, 200, 255;    /* bleu glacier */
+  --b-rgb: 150, 120, 255;   /* violet électrique */
+  --line: rgba(var(--a-rgb), 0.14);
+  --text: #d7e0e8;
+  --muted: #7d8b99;
+  --accent: rgb(var(--a-rgb));
+  --accent-2: rgb(var(--b-rgb));
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent); color: var(--bg); }
+
+/* ---------- Fond animé : réseau + halos ---------- */
+body {
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(var(--b-rgb), .10), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 90% 90%, rgba(var(--a-rgb), .08), transparent 60%),
+    linear-gradient(180deg, #050a14 0%, #071021 50%, #04070d 100%);
+  background-attachment: fixed;
+}
+#matrix {
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+}
+.grid-bg {
+  position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(var(--b-rgb), .12), transparent 35%),
+    radial-gradient(circle at 70% 60%, rgba(var(--a-rgb), .10), transparent 35%);
+  filter: blur(40px);
+  animation: aurora 18s ease-in-out infinite alternate;
+}
+@keyframes aurora {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  50%  { transform: translate(5%, -4%) rotate(8deg); }
+  100% { transform: translate(-5%, 4%) rotate(-6deg); }
+}
+
+/* ---------- En-tête ---------- */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 26px 6vw;
+  transition: background .4s, padding .4s;
+}
+.header.scrolled {
+  background: rgba(5, 8, 13, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 14px 6vw;
+  border-bottom: 1px solid var(--line);
+}
+.logo-mini {
+  font-family: var(--mono); font-weight: 600; font-size: 1.1rem;
+  letter-spacing: 4px; color: var(--accent);
+  border: 1px solid var(--accent); padding: 4px 10px;
+}
+.nav { display: flex; gap: 34px; }
+.nav a {
+  font-family: var(--mono); font-size: .72rem;
+  text-transform: uppercase; letter-spacing: 3px;
+  color: var(--muted); position: relative; transition: color .3s;
+}
+.nav a::after {
+  content: ''; position: absolute; left: 0; bottom: -6px;
+  width: 0; height: 1px; background: var(--accent); transition: width .4s;
+}
+.nav a:hover, .nav a.active { color: var(--accent); }
+.nav a:hover::after, .nav a.active::after { width: 100%; }
+.burger { display: none; background: none; border: 0; cursor: pointer; width: 30px; }
+.burger span { display: block; height: 1px; background: var(--text); margin: 7px 0; transition: .3s; }
+
+/* ---------- Typo commune (style Genus) ---------- */
+.kicker {
+  font-family: var(--mono); font-weight: 400;
+  font-size: .75rem; letter-spacing: 5px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 18px;
+}
+.title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1.05;
+  margin-bottom: 30px;
+}
+.title span { display: block; }
+.title.center { text-align: center; }
+.accent {
+  font-style: italic;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+p { color: var(--muted); margin-bottom: 18px; max-width: 560px; }
+strong { color: var(--text); font-weight: 500; }
+
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.tags li {
+  font-family: var(--mono); font-size: .75rem; color: var(--accent-2);
+  border: 1px solid rgba(var(--b-rgb), .3); padding: 4px 12px;
+}
+
+/* ---------- 1. Accueil ---------- */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 6vw 160px; position: relative;
+}
+.shield { width: 110px; margin-bottom: 40px; filter: drop-shadow(0 0 18px rgba(var(--a-rgb),.45)); }
+.shield path {
+  fill: none; stroke: var(--accent); stroke-width: 2.5;
+  stroke-dasharray: 400; stroke-dashoffset: 400;
+  animation: draw 2.4s ease forwards .3s;
+}
+.shield text {
+  font-family: var(--mono); font-weight: 600; font-size: 30px;
+  fill: var(--accent); letter-spacing: 3px; opacity: 0;
+  animation: fadeIn 1s forwards 1.8s;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+.hero-title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(3.2rem, 9vw, 7.5rem); line-height: 1; margin-bottom: 30px;
+}
+.hero-title .line { display: block; }
+.hero-sub { font-family: var(--mono); font-size: .95rem; max-width: none; color: var(--text); }
+.prompt { color: var(--accent); margin-right: 8px; }
+.cursor { color: var(--accent); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.scroll-down {
+  position: absolute; bottom: 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: .65rem; letter-spacing: 4px; text-transform: uppercase; color: var(--muted);
+}
+.scroll-down i { width: 1px; height: 60px; background: var(--line); position: relative; overflow: hidden; }
+.scroll-down i::after {
+  content: ''; position: absolute; top: -60px; left: 0; width: 1px; height: 60px;
+  background: var(--accent); animation: drop 2s infinite;
+}
+@keyframes drop { to { top: 60px; } }
+
+/* ---------- Sections ---------- */
+.section { padding: 140px 6vw; max-width: 1300px; margin: 0 auto; }
+.section-head { text-align: center; margin-bottom: 80px; }
+.section-head p { margin: 0 auto; }
+
+/* Bloc image + texte (comme les blocs alternés de Genus) */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; align-items: center; }
+.split.reverse .project-visual { order: 2; }
+
+/* ---------- 2. À propos ---------- */
+.photo-frame {
+  position: relative; aspect-ratio: 4 / 5; max-width: 460px; margin: 0 auto;
+  border: 1px solid var(--line); overflow: hidden; background: var(--bg-2);
+}
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.3) contrast(1.05); transition: filter .6s, transform 1.2s; }
+.photo-frame:hover img { filter: grayscale(0); transform: scale(1.04); }
+.photo-placeholder {
+  display: none; width: 100%; height: 100%;
+  flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--mono); color: var(--accent);
+}
+.photo-placeholder small { color: var(--muted); }
+.scan-line {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  box-shadow: 0 0 14px var(--accent); animation: scan 4s linear infinite;
+}
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+.corner { position: absolute; width: 22px; height: 22px; border: 2px solid var(--accent); }
+.corner.tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.corner.tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+.corner.bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+.corner.br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+/* ---------- 3. Compétences ---------- */
+.counters {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  margin-bottom: 90px;
+}
+.counter { text-align: center; padding: 40px 10px; }
+.counter + .counter { border-left: 1px solid var(--line); }
+.counter .num { font-family: var(--serif); font-size: clamp(2.8rem, 5vw, 4.5rem); color: var(--text); display: block; line-height: 1.1; }
+.counter h5 { font-family: var(--mono); font-weight: 400; font-size: .7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); }
+
+.skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.skill-card {
+  background: var(--card); border: 1px solid var(--line); padding: 38px 32px;
+  transition: transform .5s, border-color .5s, box-shadow .5s;
+}
+.skill-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 40px -20px rgba(var(--a-rgb),.35); }
+.skill-icon { font-family: var(--mono); font-size: 1.6rem; color: var(--accent); margin-bottom: 18px; }
+.skill-card h3 { font-family: var(--serif); font-weight: 400; font-size: 1.7rem; margin-bottom: 8px; }
+.skill-card p { font-size: .9rem; }
+.bar { height: 2px; background: rgba(255,255,255,.07); margin-top: 20px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 1.8s cubic-bezier(.2,.8,.2,1); }
+
+/* ---------- 4. Projets ---------- */
+.project { margin-bottom: 140px; }
+.project:last-child { margin-bottom: 0; }
+.project-visual, .project > img {
+  aspect-ratio: 4 / 3; width: 100%; object-fit: cover;
+  border: 1px solid var(--line); position: relative; overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(var(--a-rgb),.18), transparent 60%),
+    radial-gradient(circle at 75% 70%, rgba(var(--b-rgb),.15), transparent 55%),
+    var(--bg-2);
+  display: flex; align-items: center; justify-content: center;
+}
+.project-visual::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(var(--a-rgb),.04) 3px 4px);
+}
+.project-visual span { font-family: var(--serif); font-style: italic; font-size: 9rem; color: rgba(var(--a-rgb),.25); transition: transform 1s, color 1s; }
+.project:hover .project-visual span { transform: scale(1.1); color: rgba(var(--a-rgb),.5); }
+.project-title { font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1.15; margin-bottom: 20px; }
+
+/* ---------- 5. Expérience (timeline) ---------- */
+.timeline { position: relative; max-width: 900px; margin: 0 auto; }
+.timeline::before { content: ''; position: absolute; left: 160px; top: 0; bottom: 0; width: 1px; background: var(--line); }
+.tl-item { display: grid; grid-template-columns: 160px 1fr; gap: 50px; margin-bottom: 60px; position: relative; }
+.tl-item::before {
+  content: ''; position: absolute; left: 155px; top: 10px; width: 11px; height: 11px;
+  background: var(--accent); border-radius: 50%; box-shadow: 0 0 14px var(--accent);
+}
+.tl-date { font-family: var(--mono); font-size: .75rem; letter-spacing: 2px; color: var(--accent); padding-top: 4px; padding-right: 20px; text-transform: uppercase; }
+.tl-card { background: var(--card); border: 1px solid var(--line); padding: 32px; margin-left: 10px; }
+.tl-card h3 { font-family: var(--serif); font-weight: 400; font-size: 1.8rem; }
+.tl-card h5 { font-family: var(--mono); font-weight: 400; font-size: .75rem; color: var(--accent-2); letter-spacing: 2px; margin-bottom: 14px; }
+
+/* ---------- 6. Certifications ---------- */
+.certs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.cert {
+  text-align: center; padding: 44px 24px; border: 1px solid var(--line); background: var(--card);
+  transition: transform .5s, border-color .5s;
+}
+.cert:hover { transform: translateY(-6px) rotateX(6deg); border-color: var(--accent-2); }
+.cert-badge {
+  width: 64px; height: 64px; margin: 0 auto 22px; border-radius: 50%;
+  border: 1px solid var(--accent); color: var(--accent); font-size: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 0 18px rgba(var(--a-rgb),.2), 0 0 18px rgba(var(--a-rgb),.2);
+}
+.cert h3 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; line-height: 1.2; margin-bottom: 10px; }
+.cert h5 { font-family: var(--mono); font-weight: 400; font-size: .7rem; color: var(--muted); letter-spacing: 1px; }
+.cert.pending { opacity: .6; border-style: dashed; }
+
+/* ---------- 7. Contact ---------- */
+.contact-intro { text-align: center; }
+.contact-links { max-width: 760px; margin: 0 auto; border-top: 1px solid var(--line); }
+.contact-link {
+  display: flex; justify-content: space-between; align-items: center; gap: 20px;
+  padding: 28px 10px; border-bottom: 1px solid var(--line);
+  font-family: var(--serif); font-size: clamp(1.2rem, 2.5vw, 1.9rem);
+  transition: padding .4s, color .4s, background .4s;
+}
+.contact-link span { font-family: var(--mono); font-size: .7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); }
+.contact-link:hover { padding-left: 30px; color: var(--accent); background: rgba(var(--a-rgb),.04); }
+
+.footer { text-align: center; padding: 60px 6vw; border-top: 1px solid var(--line); }
+.footer p { margin: 14px auto 0; font-size: .8rem; max-width: none; }
+.footer .mono { font-family: var(--mono); color: var(--accent); font-size: .7rem; }
+
+/* ---------- Animations d'apparition au scroll ---------- */
+.reveal, .reveal-left, .reveal-right {
+  opacity: 0; transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.reveal { transform: translateY(60px); }
+.reveal-left { transform: translateX(-80px); }
+.reveal-right { transform: translateX(80px); }
+.visible { opacity: 1; transform: none; }
+
+/* Effet glitch au survol du titre principal */
+.hero-title .line:hover { animation: glitch .4s steps(2) 2; }
+@keyframes glitch {
+  0% { text-shadow: 3px 0 var(--accent), -3px 0 var(--accent-2); transform: translateX(2px); }
+  50% { text-shadow: -3px 0 var(--accent), 3px 0 var(--accent-2); transform: translateX(-2px); }
+  100% { text-shadow: none; transform: none; }
+}
+
+/* ---------- Responsive (téléphone / tablette) ---------- */
+@media (max-width: 980px) {
+  .skills-grid, .certs { grid-template-columns: repeat(2, 1fr); }
+  .counters { grid-template-columns: repeat(2, 1fr); }
+  .counter:nth-child(3) { border-left: 0; }
+  .counter:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 820px) {
+  .burger { display: block; }
+  .nav {
+    position: fixed; inset: 0; background: rgba(5,8,13,.97);
+    flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    opacity: 0; pointer-events: none; transition: opacity .4s;
+  }
+  .nav a { font-size: .9rem; }
+  .nav.open { opacity: 1; pointer-events: all; }
+  .burger { position: relative; z-index: 101; }
+  .burger.open span:first-child { transform: translateY(4px) rotate(45deg); }
+  .burger.open span:last-child { transform: translateY(-4px) rotate(-45deg); }
+
+  .section { padding: 100px 16px; }
+  .split { grid-template-columns: 1fr; gap: 50px; }
+  .split.reverse .project-visual { order: 0; }
+  .project { margin-bottom: 90px; }
+  .timeline::before { left: 6px; }
+  .tl-item { grid-template-columns: 1fr; gap: 12px; padding-left: 30px; }
+  .tl-item::before { left: 1px; }
+  .tl-card { margin-left: 0; }
+  .reveal-left, .reveal-right { transform: translateY(60px); }
+}
+@media (max-width: 520px) {
+  .skills-grid, .certs { grid-template-columns: 1fr; }
+  .contact-link { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .project-visual span { font-size: 6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
+}
+
+
+/* =========================================================
+   EFFET « GNS1.2 DRAGON » : image fixe + section qui passe dessus
+   ========================================================= */
+.curtain-wrap { position: relative; }
+.curtain {
+  position: sticky; top: 0; height: 100vh; overflow: hidden; z-index: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.curtain-media { position: absolute; inset: 0; will-change: transform; }
+.curtain-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+.curtain-media {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(var(--a-rgb),.12), transparent 45%),
+    radial-gradient(ellipse at 50% 120%, rgba(var(--b-rgb),.18), transparent 60%),
+    #040810;
+}
+.radar { position: absolute; left: 50%; top: 50%; width: min(80vh, 80vw); aspect-ratio: 1; transform: translate(-50%,-50%); }
+.ring { position: absolute; border: 1px solid rgba(var(--a-rgb),.25); border-radius: 50%; }
+.ring.r1 { inset: 0; }
+.ring.r2 { inset: 17%; border-style: dashed; animation: spin 40s linear infinite; }
+.ring.r3 { inset: 34%; border-color: rgba(var(--b-rgb),.35); animation: spin 25s linear infinite reverse; }
+.sweep {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(var(--a-rgb),.35), transparent 25%);
+  animation: spin 5s linear infinite;
+  mask-image: radial-gradient(circle, #000 69%, transparent 70%);
+}
+.radar-shield { position: absolute; left: 50%; top: 50%; width: 16%; transform: translate(-50%,-50%); filter: drop-shadow(0 0 20px var(--accent)); }
+.radar-shield path { fill: rgba(var(--a-rgb),.08); stroke: var(--accent); stroke-width: 2; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.curtain-shade { position: absolute; inset: 0; background: #03060b; opacity: 0; pointer-events: none; z-index: 3; }
+.curtain-text { position: relative; z-index: 4; text-align: center; padding: 0 16px; will-change: transform, opacity; }
+.curtain-title {
+  font-family: var(--serif); font-weight: 300; line-height: 1;
+  font-size: clamp(3.5rem, 11vw, 10rem);
+  text-shadow: 0 10px 60px rgba(0,0,0,.6);
+}
+.curtain-title .accent { display: block; }
+
+/* La section À propos glisse au-dessus de l'image */
+.section.over {
+  position: relative; z-index: 2; max-width: none;
+  padding-left: max(6vw, calc((100vw - 1300px) / 2 + 6vw));
+  padding-right: max(6vw, calc((100vw - 1300px) / 2 + 6vw));
+  background: linear-gradient(180deg, #050b16 0%, #06101e 100%);
+  border-top: 1px solid rgba(var(--a-rgb),.35);
+  box-shadow: 0 -40px 80px rgba(0,0,0,.7), 0 -1px 30px rgba(var(--a-rgb),.15);
+  min-height: 100vh;
+}
+
+/* =========================================================
+   EFFET « MAKING OF » : rangées d'images qui défilent au scroll
+   ========================================================= */
+.making-of { padding: 140px 0; overflow: hidden; }
+.mo-row { display: flex; gap: 24px; width: max-content; margin-bottom: 24px; align-items: center; will-change: transform; }
+.mo-tile {
+  position: relative; width: 340px; height: 230px; flex-shrink: 0; overflow: hidden;
+  border: 1px solid var(--line);
+}
+.mo-tile.tall { height: 300px; width: 260px; }
+.mo-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.2,.8,.2,1), filter .6s; filter: grayscale(.4); }
+.mo-tile:hover img { transform: scale(1.08); filter: grayscale(0); }
+.mo-ph {
+  position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 22px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(var(--a-rgb),.16), transparent 55%),
+    radial-gradient(circle at 85% 80%, rgba(var(--b-rgb),.14), transparent 55%),
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(var(--a-rgb),.04) 3px 4px),
+    #08101c;
+  transition: transform 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.mo-tile:hover .mo-ph { transform: scale(1.06); }
+.mo-ph span { font-family: var(--mono); font-size: .85rem; color: var(--accent); }
+
+@media (max-width: 820px) {
+  .mo-tile { width: 240px; height: 165px; }
+  .mo-tile.tall { width: 190px; height: 220px; }
+  .making-of { padding: 100px 0; }
+}
+
+/* =========================================================
+   FOND BOOSTÉ : aurores + vignette + grain
+   ========================================================= */
+body {
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(var(--b-rgb), .10), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 90% 90%, rgba(var(--a-rgb), .08), transparent 60%),
+    linear-gradient(180deg, #04070f 0%, #070b1c 50%, #03050b 100%);
+  background-attachment: fixed;
+}
+.grid-bg { inset: 0; filter: none; animation: none; background: none; z-index: -1; }
+.grid-bg::before, .grid-bg::after {
+  content: ''; position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%;
+  filter: blur(90px); opacity: .5; mix-blend-mode: screen;
+}
+.grid-bg::before {
+  background: radial-gradient(circle, rgba(var(--b-rgb), .55), transparent 65%);
+  top: -25vmax; left: -15vmax; animation: blobA 26s ease-in-out infinite alternate;
+}
+.grid-bg::after {
+  background: radial-gradient(circle, rgba(var(--a-rgb), .45), transparent 65%);
+  bottom: -30vmax; right: -20vmax; animation: blobB 32s ease-in-out infinite alternate;
+}
+@keyframes blobA { to { transform: translate(35vw, 30vh) scale(1.25); } }
+@keyframes blobB { to { transform: translate(-40vw, -25vh) scale(.85); } }
+.fx-overlay {
+  position: fixed; inset: 0; pointer-events: none; z-index: -1;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.65) 100%),
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,.012) 2px 3px);
+}
+
+/* Transition douce accueil → image */
+.hero { will-change: transform, opacity, filter; }
+.curtain-media {
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 calc(var(--f, 1) * 70%));
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 calc(var(--f, 1) * 70%));
+}
+.curtain-text .kicker, .curtain-title { will-change: letter-spacing, filter; }
+
+/* Le panneau À propos arrive avec des coins arrondis qui s'aplatissent */
+.section.over {
+  border-top: 0;
+  border-radius: var(--r, 48px) var(--r, 48px) 0 0;
+  box-shadow: 0 -30px 80px rgba(0,0,0,.75), 0 -1px 0 rgba(var(--a-rgb), .35), 0 -20px 60px rgba(var(--a-rgb), .08);
+}
+
+/* =========================================================
+   RESPONSIVE (téléphone, tablette, téléphone à l'horizontale)
+   ========================================================= */
+/* Hauteur d'écran fiable sur mobile (barre d'adresse qui apparaît / disparaît) */
+@supports (height: 100svh) {
+  .hero { min-height: 100svh; }
+  .curtain { height: 100svh; }
+  .section.over { min-height: 100svh; }
+}
+.hero-title, .title, .project-title, .curtain-title { overflow-wrap: break-word; }
+.contact-link { overflow-wrap: anywhere; }
+
+/* Tablette */
+@media (max-width: 1024px) {
+  .section { padding-top: 110px; padding-bottom: 110px; }
+  .split { gap: 6vw; }
+}
+
+/* Téléphone */
+@media (max-width: 820px) {
+  body, .grid-bg { background-attachment: scroll; }  /* iOS gère mal le fond fixe */
+  .header { padding: 18px 20px; }
+  .header.scrolled { padding: 12px 20px; }
+  .section.over { padding-left: 20px; padding-right: 20px; padding-top: 90px; }
+  .hero { padding: 100px 20px 140px; }
+  .shield { width: 90px; margin-bottom: 30px; }
+  .section-head { margin-bottom: 50px; }
+  .photo-frame { max-width: 340px; }
+  .counters { margin-bottom: 50px; }
+  .counter { padding: 28px 8px; }
+  .skill-card { padding: 30px 24px; }
+  .project-visual span { font-size: 7rem; }
+  .curtain-title { font-size: clamp(3rem, 15vw, 5rem); }
+  .radar { width: min(85vw, 70svh); }
+  .nav a { font-size: 1rem; }
+}
+
+@media (max-width: 520px) {
+  .kicker { font-size: .66rem; letter-spacing: 3px; }
+  .hero-title { font-size: clamp(2.6rem, 14vw, 3.6rem); }
+  .title { font-size: clamp(2.3rem, 11vw, 3rem); }
+  /* ligne du terminal : prompt au-dessus, hauteur fixe → la page ne saute plus */
+  .hero-sub { font-size: .8rem; min-height: 5em; line-height: 1.6; }
+  .hero-sub .prompt { display: block; margin: 0 0 2px; }
+  .tl-card { padding: 24px 20px; }
+  .tl-card h3 { font-size: 1.5rem; }
+  .cert { padding: 34px 20px; }
+  .contact-link { padding: 22px 6px; }
+  .contact-link:hover { padding-left: 14px; }
+  .footer { padding: 50px 20px; }
+}
+
+/* Très petits écrans (iPhone SE 1re gén., etc.) */
+@media (max-width: 360px) {
+  .hero-title { font-size: 2.4rem; }
+  .counter .num { font-size: 2.4rem; }
+  .counter h5 { font-size: .6rem; letter-spacing: 2px; }
+  .mo-tile { width: 200px; height: 140px; }
+  .mo-tile.tall { width: 160px; height: 190px; }
+}
+
+/* Téléphone tenu à l'horizontale (écran peu haut) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero { padding: 80px 20px 40px; justify-content: center; }
+  .shield { width: 54px; margin-bottom: 14px; }
+  .hero .kicker { margin-bottom: 8px; }
+  .hero-title { font-size: clamp(2.2rem, 8vw, 3.2rem); margin-bottom: 12px; }
+  .scroll-down { display: none; }
+  .curtain-title { font-size: clamp(2.6rem, 9vw, 4rem); }
+  .radar { width: 80svh; }
+  .section.over { padding-top: 70px; }
+  .photo-frame { max-width: 260px; }
+  .nav { gap: 18px; }
+  .nav a { font-size: .8rem; }
+}
+
+/* Écrans tactiles : pas d'effets de survol qui « restent collés » */
+@media (hover: none) {
+  .skill-card:hover, .cert:hover { transform: none; }
+  .contact-link:hover { padding-left: 6px; background: none; color: inherit; }
+}
+
+/* =========================================================
+   BOUTON « VOIR LE PROJET »
+   ========================================================= */
+.project-link {
+  position: relative; display: inline-flex; align-items: center; gap: 12px;
+  margin-top: 30px; padding: 13px 22px;
+  font-family: var(--mono); font-size: .78rem; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent); border: 1px solid rgba(var(--a-rgb), .45);
+  background: rgba(var(--a-rgb), .04); overflow: hidden; isolation: isolate;
+  transition: color .45s, border-color .45s, box-shadow .45s;
+}
+.project-link::before {                          /* remplissage qui balaie au survol */
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform: scaleX(0); transform-origin: left; transition: transform .5s cubic-bezier(.7,0,.2,1);
+}
+.project-link::after {                           /* reflet qui traverse le bouton */
+  content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  transform: skewX(-20deg); animation: plShine 3.5s ease-in-out infinite;
+}
+@keyframes plShine { 0%, 60% { left: -60%; } 100% { left: 130%; } }
+.pl-prompt { opacity: .6; }
+.pl-arrow { display: inline-block; transition: transform .45s; }
+.project-link:hover { color: #050a14; border-color: transparent; box-shadow: 0 10px 40px -10px rgba(var(--a-rgb), .7); }
+.project-link:hover::before { transform: scaleX(1); }
+.project-link:hover .pl-arrow { transform: translate(4px, -4px); }
+.project-link:hover .pl-prompt { opacity: 1; animation: blink 1s steps(1) infinite; }
+
+/* =========================================================
+   LOGO DE L'ENTREPRISE (coin haut droit des cartes Expérience)
+   ========================================================= */
+.tl-card { position: relative; padding-right: 130px; }
+.tl-logo {
+  position: absolute; top: 22px; right: 22px;
+  width: 84px; height: 84px; display: flex; align-items: center; justify-content: center;
+  padding: 10px; border: 1px solid var(--line); border-radius: 14px;
+  background: rgba(255,255,255,.04); backdrop-filter: blur(6px);
+  transition: transform .5s cubic-bezier(.2,.8,.2,1), border-color .4s, box-shadow .4s, background .4s;
+}
+.tl-logo img { position: relative; z-index: 1; max-width: 100%; max-height: 100%; object-fit: contain; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.tl-logo-ph { position: absolute; font-family: var(--mono); font-size: .62rem; letter-spacing: 3px; color: var(--muted); }
+.tl-logo img + .tl-logo-ph { display: none; }
+/* Survol : halo bleu-violet + bordure lumineuse, le logo garde ses couleurs */
+.tl-logo:hover {
+  transform: translateY(-4px) rotate(-3deg);
+  border-color: rgba(var(--a-rgb), .9);
+  background: linear-gradient(135deg, rgba(var(--a-rgb), .22), rgba(var(--b-rgb), .22));
+  box-shadow: 0 0 0 1px rgba(var(--b-rgb), .5), 0 14px 40px -10px rgba(var(--a-rgb), .7), inset 0 0 20px rgba(var(--a-rgb), .25);
+}
+.tl-logo:hover img { transform: scale(1.08); }
+.tl-logo:hover .tl-logo-ph { color: var(--accent); }
+
+@media (max-width: 520px) {
+  .tl-card { padding-right: 20px; padding-top: 92px; }
+  .tl-logo { width: 62px; height: 62px; top: 18px; right: 18px; left: auto; border-radius: 12px; }
+  .project-link { width: 100%; justify-content: center; }
+}
+@media (hover: none) {
+  .project-link:hover { color: var(--accent); box-shadow: none; border-color: rgba(var(--a-rgb), .45); }
+  .project-link:hover::before { transform: scaleX(0); }
+}
+</style>
+</head>
+<body>
+
+  <!-- Fond animé (réseau de points + halos) -->
+  <canvas id="matrix"></canvas>
+  <div class="grid-bg"></div>
+  <div class="fx-overlay"></div>
+
+  <!-- ===== EN-TÊTE / MENU ===== -->
+  <header class="header" id="header">
+    <a href="#accueil" class="header-logo">
+      <!-- ✏️ Remplace "AG" par tes initiales -->
+      <span class="logo-mini">AG</span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#apropos">À propos</a>
+      <a href="#competences">Compétences</a>
+      <a href="#projets">Projets</a>
+      <a href="#experience">Expérience</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Ouvrir le menu"><span></span><span></span></button>
+  </header>
+
+  <!-- ===== 1. ACCUEIL : LOGO + TEXTE SYMPA ===== -->
+  <section class="hero" id="accueil">
+    <div class="hero-logo reveal">
+      <!-- Logo : un bouclier avec tes initiales -->
+      <svg viewBox="0 0 120 140" class="shield">
+        <path d="M60 4 L112 24 V66 C112 100 90 124 60 136 C30 124 8 100 8 66 V24 Z" />
+        <text x="60" y="84" text-anchor="middle">AG</text>
+      </svg>
+    </div>
+    <h5 class="kicker reveal">// Sécuriser le présent, protéger le futur</h5>
+    <h1 class="hero-title reveal">
+      <span class="line">Alan</span>
+      <span class="line accent">Guillet</span>
+    </h1>
+    <p class="hero-sub reveal">
+      <span class="prompt">root@portfolio:~$</span>
+      <span id="typed"></span><span class="cursor">_</span>
+    </p>
+    <a href="#apropos" class="scroll-down" aria-label="Descendre">
+      <span>Découvrir</span>
+      <i></i>
+    </a>
+  </section>
+
+  <!-- ===== IMAGE FIXE (effet « GNS1.2 Dragon ») =====
+       La grande image reste fixe, la section « À propos » vient glisser par-dessus.
+       📸 Pour mettre ta propre image : place-la dans "images" et nomme-la "banniere.jpg" -->
+  <div class="curtain-wrap">
+    <section class="curtain" id="curtain">
+      <div class="curtain-media" id="curtainMedia">
+        <img src="images/banniere.jpg" alt="" onerror="this.remove()">
+        <div class="radar">
+          <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
+          <span class="sweep"></span>
+          <svg viewBox="0 0 120 140" class="radar-shield"><path d="M60 4 L112 24 V66 C112 100 90 124 60 136 C30 124 8 100 8 66 V24 Z"/></svg>
+        </div>
+      </div>
+      <div class="curtain-shade" id="curtainShade"></div>
+      <div class="curtain-text" id="curtainText">
+        <h5 class="kicker">Défense · Analyse · Protection</h5>
+        <!-- ✏️ Ton grand titre -->
+        <h2 class="curtain-title">Cyber <span class="accent">«&nbsp;Sécurité&nbsp;»</span></h2>
+      </div>
+    </section>
+
+  <!-- ===== 2. À PROPOS DE MOI ===== -->
+  <section class="section split over" id="apropos">
+    <div class="split-media reveal-left">
+      <div class="photo-frame">
+        <!-- 📸 TA PHOTO : mets ton image dans le dossier "images" et nomme-la "moi.jpg" -->
+        <img src="images/moi.jpg" alt="Photo de moi"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="photo-placeholder">
+          <span>[ ta photo ici ]</span>
+          <small>images/moi.jpg</small>
+        </div>
+        <div class="scan-line"></div>
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+      </div>
+    </div>
+    <div class="split-text reveal-right">
+      <h5 class="kicker">01 — Qui suis-je</h5>
+      <h2 class="title"><span>À propos</span><span class="accent">de moi</span></h2>
+      <!-- ✏️ Remplace ce texte par le tien -->
+      <p>
+        Étudiant en deuxième année de Bachelor cybersécurité à la <strong>Guardia Cybersecurity School</strong>,
+        je m'intéresse à la manière dont les systèmes fonctionnent… et surtout à la manière dont on peut les
+        détourner, puis les protéger. Curieux et rigoureux, j'aime comprendre une attaque de bout en bout.
+      </p>
+      <p>
+        Aujourd'hui, deux voies m'attirent : le <strong>pentest</strong> et l'<strong>analyse en lutte
+        anti-fraude</strong>, deux métiers où il faut penser comme l'attaquant. À travers mes stages, mes
+        projets et des challenges CTF, je développe des compétences sur ces deux terrains.
+      </p>
+      <ul class="tags">
+        <li>#Curiosité</li><li>#Rigueur</li><li>#EspritD'équipe</li>
+      </ul>
+    </div>
+  </section>
+
+  </div><!-- fin curtain-wrap -->
+
+  <!-- ===== 3. COMPÉTENCES ===== -->
+  <section class="section" id="competences">
+    <div class="section-head reveal">
+      <h5 class="kicker">02 — Arsenal technique</h5>
+      <h2 class="title center"><span>Mes</span><span class="accent">Compétences</span></h2>
+    </div>
+
+    <!-- Compteurs animés (comme "Composants / Rubis / ATM" sur Genus) -->
+    <div class="counters">
+      <div class="counter reveal"><span class="num" data-target="4">0</span><h5>Projets réalisés</h5></div>
+      <div class="counter reveal"><span class="num" data-target="3">0</span><h5>Stages</h5></div>
+      <div class="counter reveal"><span class="num" data-target="0">0</span><h5>Certifications</h5></div>
+      <div class="counter reveal"><span class="num" data-target="1">0</span><h5>Challenges CTF</h5></div>
+    </div>
+
+    <!-- ✏️ Adapte les compétences et les pourcentages -->
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon">⌁</div>
+        <h3>Réseaux</h3>
+        <p>TCP/IP, VLAN, routage, pare-feu, Wireshark</p>
+        <div class="bar"><i data-level="40"></i></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">❖</div>
+        <h3>Systèmes</h3>
+        <p>Linux, Windows Server, Active Directory</p>
+        <div class="bar"><i data-level="35"></i></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">⚑</div>
+        <h3>Pentest</h3>
+        <p>Nmap, Burp Suite, Metasploit, OWASP Top 10</p>
+        <div class="bar"><i data-level="15"></i></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">◈</div>
+        <h3>Défense / SOC</h3>
+        <p>SIEM, analyse de logs, gestion d'incidents</p>
+        <div class="bar"><i data-level="10"></i></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">{ }</div>
+        <h3>Programmation</h3>
+        <p>Python, Bash, PowerShell, SQL</p>
+        <div class="bar"><i data-level="20"></i></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">⚖</div>
+        <h3>Gouvernance</h3>
+        <p>RGPD, ISO 27001, analyse de risques</p>
+        <div class="bar"><i data-level="15"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 4. PROJETS (école) ===== -->
+  <section class="section" id="projets">
+    <div class="section-head reveal">
+      <h5 class="kicker">03 — Réalisations à l'école</h5>
+      <h2 class="title center"><span>Mes</span><span class="accent">Projets</span></h2>
+    </div>
+
+    <!-- ✏️ Un bloc = un projet. Copie-colle un bloc pour en ajouter.
+         🔗 Chaque projet a un bouton « Voir le projet » : mets ton lien dans href="…".
+         Pour mettre une image : remplace le <div class="project-visual">…</div>
+         par <img src="images/projet1.jpg" alt=""> -->
+    <article class="project split reveal">
+      <div class="project-visual"><span>01</span></div>
+      <div class="split-text">
+        <h5 class="kicker">Projet d'école — 2026</h5>
+        <h3 class="project-title">Création et configuration réseaux/IP des VM</h3>
+        <p>Déploiement d'une infrastructure réseau virtuelle sécurisée 
+          (LAN/WAN) avec pare-feu Stormshield, incluant les services 
+          DNS/DHCP et le filtrage avancé.</p>
+        <ul class="tags"><li>#Stormshield</li><li>#DNS/DHCP</li><li>#Pare-feu</li></ul>
+        <!-- 🔗 Lien du projet : remplace # par l'adresse (GitHub, rapport PDF, démo…) -->
+        <a href="https://github.com/RACCNOX/Projet_1_Cr-ation_Et_Configuration_R-seaux_Ip_Des_VM" target="_blank" rel="noopener" class="project-link">
+          <span class="pl-prompt">&gt;_</span><span class="pl-label">Voir le projet</span><span class="pl-arrow">↗</span>
+        </a>
+      </div>
+    </article>
+
+    <article class="project split reverse reveal">
+      <div class="project-visual"><span>02</span></div>
+      <div class="split-text">
+        <h5 class="kicker">Projet d'école — 2026</h5>
+        <h3 class="project-title">Techniques de sécurisation ISR</h3>
+        <p>Déploiement et sécurisation d'une infrastructure 
+          réseau virtuelle sous GNS3 incluant la segmentation VLAN, 
+          le routage pfSense et la mise en place d'un proxy de filtrage.</p>
+        <ul class="tags"><li>#GNS3</li><li>#pfSense</li><li>#VLAN</li></ul>
+        <!-- 🔗 Lien du projet : remplace # par l'adresse (GitHub, rapport PDF, démo…) -->
+        <a href="https://github.com/RACCNOX/Projet_2_Techniques_De_S-curisation_ISR" target="_blank" rel="noopener" class="project-link">
+          <span class="pl-prompt">&gt;_</span><span class="pl-label">Voir le projet</span><span class="pl-arrow">↗</span>
+        </a>
+      </div>
+    </article>
+
+    <article class="project split reveal">
+      <div class="project-visual"><span>03</span></div>
+      <div class="split-text">
+        <h5 class="kicker">Projet d'école — 2026</h5>
+        <h3 class="project-title">Plateforme Événementielle DevSecOps</h3>
+        <p>Développement d'une application web de gestion 
+          d'événements sécurisée, intégrant une pipeline CI/CD 
+          automatisée (SonarQube) et un déploiement sous Docker.</p>
+        <ul class="tags"><li>#DevSecOps</li><li>#SonarQube</li><li>#Docker</li></ul>
+        <!-- 🔗 Lien du projet : remplace # par l'adresse (GitHub, rapport PDF, démo…) -->
+        <a href="https://github.com/RACCNOX/Projet_3_DevSecOps" target="_blank" rel="noopener" class="project-link">
+          <span class="pl-prompt">&gt;_</span><span class="pl-label">Voir le projet</span><span class="pl-arrow">↗</span>
+        </a>
+      </div>
+    </article>
+
+    <article class="project split reverse reveal">
+      <div class="project-visual"><span>04</span></div>
+      <div class="split-text">
+        <h5 class="kicker">Projet d'école — 2026</h5>
+        <h3 class="project-title">Gestion de stock DevSecOps</h3>
+        <p>Projet en cours</p>
+        <ul class="tags"><li>#SIEM</li><li>#Wazuh</li><li>#Détection</li></ul>
+        <!-- 🔗 Lien du projet : remplace # par l'adresse (GitHub, rapport PDF, démo…) -->
+        <a href="https://github.com/RACCNOX/Projet_3_DevSecOps" target="_blank" rel="noopener" class="project-link">
+          <span class="pl-prompt">&gt;_</span><span class="pl-label">Voir le projet</span><span class="pl-arrow">↗</span>
+        </a>
+      </div>
+    </article>
+  </section>
+
+  <!-- ===== GALERIE (effet « Making Of ») =====
+       Les images défilent sur le côté quand tu descends.
+       📸 Mets tes photos dans "images" : galerie1.jpg à galerie12.jpg
+       (captures de tes projets, labo, CTF, salle de stage…) -->
+  <section class="making-of" id="coulisses">
+    <div class="section-head reveal">
+      <h5 class="kicker">Dans les coulisses</h5>
+      <h2 class="title center"><span>Making</span><span class="accent">Of</span></h2>
+    </div>
+    <div class="mo-row" data-speed="-1"><figure class="mo-tile"><div class="mo-ph"><span>$ nmap -sV 10.0.0.0/24</span></div><img src="images/galerie1.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>[ WIRESHARK ]</span></div><img src="images/galerie2.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>> SELECT * FROM logs;</span></div><img src="images/galerie3.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>pfSense · règles</span></div><img src="images/galerie4.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>$ sudo ufw enable</span></div><img src="images/galerie5.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>[ SIEM · ALERTE ]</span></div><img src="images/galerie6.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>$ nmap -sV 10.0.0.0/24</span></div><img src="images/galerie1.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>[ WIRESHARK ]</span></div><img src="images/galerie2.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>> SELECT * FROM logs;</span></div><img src="images/galerie3.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>pfSense · règles</span></div><img src="images/galerie4.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>$ sudo ufw enable</span></div><img src="images/galerie5.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>[ SIEM · ALERTE ]</span></div><img src="images/galerie6.jpg" alt="" onerror="this.remove()"></figure></div>
+    <div class="mo-row" data-speed="1"><figure class="mo-tile tall"><div class="mo-ph"><span>hash: 5f4dcc3b…</span></div><img src="images/galerie7.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>$ ssh admin@srv01</span></div><img src="images/galerie8.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>BurpSuite · Proxy</span></div><img src="images/galerie9.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>> VLAN 10 / 20 / 30</span></div><img src="images/galerie10.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>[ CTF · FLAG{…} ]</span></div><img src="images/galerie11.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>$ tail -f auth.log</span></div><img src="images/galerie12.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>hash: 5f4dcc3b…</span></div><img src="images/galerie7.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>$ ssh admin@srv01</span></div><img src="images/galerie8.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>BurpSuite · Proxy</span></div><img src="images/galerie9.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>> VLAN 10 / 20 / 30</span></div><img src="images/galerie10.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile tall"><div class="mo-ph"><span>[ CTF · FLAG{…} ]</span></div><img src="images/galerie11.jpg" alt="" onerror="this.remove()"></figure><figure class="mo-tile"><div class="mo-ph"><span>$ tail -f auth.log</span></div><img src="images/galerie12.jpg" alt="" onerror="this.remove()"></figure></div>
+  </section>
+
+  <!-- ===== 5. EXPÉRIENCE (stages) ===== -->
+  <section class="section" id="experience">
+    <div class="section-head reveal">
+      <h5 class="kicker">04 — Sur le terrain</h5>
+      <h2 class="title center"><span>Mon</span><span class="accent">Expérience</span></h2>
+    </div>
+
+    <!-- ✏️ Un bloc = un stage -->
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-date">Mai — Juil. 2026</div>
+        <div class="tl-card">
+          <!-- 🏢 Logo de l'entreprise : mets l'image dans "images" (logo-entreprise1.png)
+               et le lien vers son site dans href="…" -->
+          <a href="https://www.orangecyberdefense.com/" target="_blank" rel="noopener" class="tl-logo" aria-label="Site de l'entreprise">
+            <img src="images/orange_cyberdefense_logo.jpg" alt="Logo de l'entreprise"
+                 onerror="this.remove()">
+            <span class="tl-logo-ph">LOGO</span>
+          </a>
+          <h3>Stagiaire Analyste SOC Junior</h3>
+          <h5>Orange Cyberdefense · La Défense</h5>
+          <p>Observation et participation aux activités 
+            de surveillance de la sécurité au sein 
+            du Security Operations Center 
+            d’Orange Cyberdefense : suivi et analyse 
+            des alertes de sécurité, découverte des outils de 
+            détection des menaces et compréhension des processus 
+            opérationnels d’un SOC, permettant une première mise 
+            en pratique du métier d’analyste SOC.</p>
+          <ul class="tags"><li>#SOC</li><li>#SIEM</li><li>#Détection</li></ul>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">Déc — Janv. 2025</div>
+        <div class="tl-card">
+          <!-- 🏢 Logo de l'entreprise : mets l'image dans "images" (logo-entreprise2.png)
+               et le lien vers son site dans href="…" -->
+          <a href="https://fr.tdsynnex.com/" target="_blank" rel="noopener" class="tl-logo" aria-label="Site de l'entreprise">
+            <img src="images/tdsynexlogos.png" alt="Logo de l'entreprise"
+                 onerror="this.remove()">
+            <span class="tl-logo-ph">LOGO</span>
+          </a>
+          <h3>Stagiaire</h3>
+          <h5>TD SYNNEX France · Courbevoie</h5>
+          <p>Assistance à l’installation, au paramétrage 
+            et au maintien en conditions opérationnelles 
+            des équipements réseau, de stockage et 
+            des serveurs au sein du datacenter de 
+            démonstration de Courbevoie.</p>
+          <ul class="tags"><li>#Datacenter</li><li>#Réseau</li><li>#Serveurs</li></ul>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">Déc — Janv. 2024</div>
+        <div class="tl-card">
+          <!-- 🏢 Logo de l'entreprise : mets l'image dans "images" (logo-entreprise2.png)
+               et le lien vers son site dans href="…" -->
+          <a href="https://fr.tdsynnex.com/" target="_blank" rel="noopener" class="tl-logo" aria-label="Site de l'entreprise">
+            <img src="images/tdsynexlogos.png" alt="Logo de l'entreprise"
+                 onerror="this.remove()">
+            <span class="tl-logo-ph">LOGO</span>
+          </a>
+          <h3>Stagiaire</h3>
+          <h5>TD SYNNEX France · Courbevoie</h5>
+          <p>Assistance à l’installation, au paramétrage 
+            et au maintien en conditions opérationnelles 
+            des équipements réseau, de stockage et 
+            des serveurs au sein du datacenter de 
+            démonstration de Courbevoie.</p>
+          <ul class="tags"><li>#MCO</li><li>#Stockage</li><li>#Infrastructure</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 6. CERTIFICATIONS ===== -->
+  <section class="section" id="certifications">
+    <div class="section-head reveal">
+      <h5 class="kicker">05 — Validé & reconnu</h5>
+      <h2 class="title center"><span>Mes</span><span class="accent">Certifications</span></h2>
+    </div>
+
+    <!-- ✏️ Adapte avec tes vraies certifications -->
+    <!--
+    <div class="certs">
+      <div class="cert reveal">
+        <div class="cert-badge">✓</div>
+        <h3>SecNumacadémie</h3>
+        <h5>ANSSI · 2025</h5>
+      </div>
+      <div class="cert reveal">
+        <div class="cert-badge">✓</div>
+        <h3>Cisco CCNA — Introduction</h3>
+        <h5>Cisco Networking Academy · 2025</h5>
+      </div>
+      <div class="cert reveal">
+        <div class="cert-badge">✓</div>
+        <h3>TryHackMe — Pre Security</h3>
+        <h5>TryHackMe · 2026</h5>
+      </div>
+      <div class="cert pending reveal">
+        <div class="cert-badge">…</div>
+        <h3>CompTIA Security+</h3>
+        <h5>En préparation</h5>
+      </div>
+    </div>
+  -->
+  </section>
+
+  <!-- ===== 7. CONTACT ===== -->
+  <section class="section contact" id="contact">
+    <div class="section-head reveal">
+      <h5 class="kicker">06 — Établir la connexion</h5>
+      <h2 class="title center"><span>Me</span><span class="accent">Contacter</span></h2>
+      <p class="contact-intro">Une opportunité de stage, d'alternance ou simplement envie d'échanger ?
+        Ma boîte de réception est ouverte.</p>
+    </div>
+
+    <!-- ✏️ Mets tes vrais liens -->
+    <div class="contact-links reveal">
+      <a href="mailto:alan.guillet2610@gmail.com" class="contact-link"><span>Email</span>alan.guillet2610@gmail.com</a>
+      <a href="https://www.linkedin.com/in/alan-guillet-994a72386" target="_blank" class="contact-link"><span>LinkedIn</span>/in/alan-guillet-994a72386</a>
+      <a href="https://github.com/RACCNOX" target="_blank" class="contact-link"><span>GitHub</span>@RACCNOX</a>
+      <!-- <a href="https://tryhackme.com/p/ton-pseudo" target="_blank" class="contact-link"><span>TryHackMe</span>ton-pseudo</a> -->
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span class="logo-mini">AG</span>
+    <p>© 2026 Alan Guillet — Tous droits réservés</p>
+    <p class="mono">[ connexion chiffrée ✓ ]</p>
+  </footer>
+
+  <script>
+/* =========================================================
+   PORTFOLIO CYBERSÉCURITÉ — animations
+   ========================================================= */
+
+/* ---------- 1. Texte tapé façon terminal (accueil) ----------
+   ✏️ Modifie les phrases ici */
+const phrases = [
+  'whoami → étudiant en cybersécurité',
+  'status → à la recherche d\'un stage / alternance',
+  'mission → protéger ce qui compte',
+];
+const typedEl = document.getElementById('typed');
+let p = 0, c = 0, deleting = false;
+function type() {
+  const txt = phrases[p];
+  typedEl.textContent = txt.slice(0, c);
+  if (!deleting && c < txt.length) { c++; setTimeout(type, 55); }
+  else if (!deleting) { deleting = true; setTimeout(type, 1800); }
+  else if (c > 0) { c--; setTimeout(type, 25); }
+  else { deleting = false; p = (p + 1) % phrases.length; setTimeout(type, 400); }
+}
+setTimeout(type, 1200);
+
+/* ---------- 2. Fond : réseau 3D de points connectés ----------
+   Profondeur (parallaxe souris + scroll), paquets de données qui circulent
+   le long des liens, « pings » sur les nœuds, onde de choc au clic.
+   ✏️ Réglages : */
+const NB_POINTS = innerWidth < 700 ? 70 : 150;
+const LINK_DIST = 170;
+const MAX_PACKETS = 45;
+
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+const css = getComputedStyle(document.documentElement);
+const A = css.getPropertyValue('--a-rgb').trim();
+const B = css.getPropertyValue('--b-rgb').trim();
+const DPR = Math.min(devicePixelRatio || 1, 2);
+let W, H, pts = [], packets = [], pings = [], waves = [];
+const mouse = { x: -9999, y: -9999, sx: 0, sy: 0 };
+
+// Halo lumineux pré-dessiné (bien plus rapide que shadowBlur)
+function makeGlow(rgb) {
+  const g = document.createElement('canvas'); g.width = g.height = 64;
+  const c = g.getContext('2d'), grd = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grd.addColorStop(0, `rgba(${rgb},1)`); grd.addColorStop(.25, `rgba(${rgb},.45)`); grd.addColorStop(1, `rgba(${rgb},0)`);
+  c.fillStyle = grd; c.fillRect(0, 0, 64, 64); return g;
+}
+const glowA = makeGlow(A), glowB = makeGlow(B), glowW = makeGlow('255,255,255');
+
+function resize() {
+  W = innerWidth; H = innerHeight;
+  canvas.width = W * DPR; canvas.height = H * DPR;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  pts = Array.from({ length: NB_POINTS }, () => {
+    const z = Math.random() * .8 + .2; // profondeur : 0.2 (loin) → 1 (proche)
+    return { x: Math.random() * W, y: Math.random() * H * 1.4, z,
+             vx: (Math.random() - .5) * .35 * z, vy: (Math.random() - .5) * .35 * z,
+             hue: Math.random() < .25 ? 1 : 0, px: 0, py: 0 };
+  });
+}
+resize(); addEventListener('resize', resize);
+addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+addEventListener('mouseout', () => { mouse.x = mouse.y = -9999; });
+addEventListener('click', (e) => waves.push({ x: e.clientX, y: e.clientY, r: 0 }));
+
+let t = 0;
+function network() {
+  t++;
+  ctx.clearRect(0, 0, W, H);
+  // parallaxe : la souris et le scroll décalent les plans selon leur profondeur
+  const tx = mouse.x > -9000 ? (mouse.x - W / 2) : 0, ty = mouse.y > -9000 ? (mouse.y - H / 2) : 0;
+  mouse.sx += (tx - mouse.sx) * .05; mouse.sy += (ty - mouse.sy) * .05;
+  const sc = scrollY;
+  const HH = H * 1.4;
+
+  for (const p of pts) {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < -50) p.x = W + 50; if (p.x > W + 50) p.x = -50;
+    if (p.y < -50) p.y = HH; if (p.y > HH) p.y = -50;
+    p.px = p.x - mouse.sx * p.z * .04;
+    p.py = ((p.y - sc * p.z * .25) % HH + HH) % HH - H * .2 - mouse.sy * p.z * .04;
+    // attraction douce vers la souris
+    const dx = mouse.x - p.px, dy = mouse.y - p.py, d = Math.hypot(dx, dy);
+    if (d < 220 && d > 30) { p.x += dx / d * .35 * p.z; p.y += dy / d * .35 * p.z; }
+    // ondes de choc
+    for (const w of waves) {
+      const wx = p.px - w.x, wy = p.py - w.y, wd = Math.hypot(wx, wy);
+      if (Math.abs(wd - w.r) < 30) { p.x += wx / wd * 6 * p.z; p.y += wy / wd * 6 * p.z; }
+    }
+  }
+
+  // liens
+  const links = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i];
+    for (let j = i + 1; j < pts.length; j++) {
+      const b = pts[j];
+      if (Math.abs(a.z - b.z) > .3) continue;
+      const maxD = LINK_DIST * (a.z + b.z) / 2;
+      const dx = a.px - b.px; if (dx > maxD || dx < -maxD) continue;
+      const d = Math.hypot(dx, a.py - b.py);
+      if (d < maxD) {
+        const al = (1 - d / maxD) * .35 * Math.min(a.z, b.z);
+        ctx.strokeStyle = `rgba(${a.hue && b.hue ? B : A},${al})`;
+        ctx.lineWidth = .5 + a.z * .6;
+        ctx.beginPath(); ctx.moveTo(a.px, a.py); ctx.lineTo(b.px, b.py); ctx.stroke();
+        links.push([a, b]);
+      }
+    }
+    // liens vers la souris
+    const m = Math.hypot(a.px - mouse.x, a.py - mouse.y);
+    if (m < 230) {
+      const g = ctx.createLinearGradient(a.px, a.py, mouse.x, mouse.y);
+      g.addColorStop(0, `rgba(${A},${(1 - m / 230) * .7 * a.z})`); g.addColorStop(1, `rgba(${B},0)`);
+      ctx.strokeStyle = g; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(a.px, a.py); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+    }
+  }
+
+  // paquets de données qui voyagent sur les liens
+  if (links.length && packets.length < MAX_PACKETS && Math.random() < .35) {
+    const [a, b] = links[(Math.random() * links.length) | 0];
+    packets.push(Math.random() < .5 ? { a, b, k: 0 } : { a: b, b: a, k: 0 });
+  }
+  ctx.globalCompositeOperation = 'lighter';
+  packets = packets.filter((pk) => {
+    pk.k += .012 + pk.a.z * .01;
+    if (pk.k >= 1) { if (Math.random() < .15) pings.push({ p: pk.b, r: 0 }); return false; }
+    const x = pk.a.px + (pk.b.px - pk.a.px) * pk.k, y = pk.a.py + (pk.b.py - pk.a.py) * pk.k;
+    const s = 10 + pk.a.z * 14;
+    ctx.drawImage(pk.a.hue ? glowB : glowA, x - s / 2, y - s / 2, s, s);
+    ctx.drawImage(glowW, x - 2, y - 2, 4, 4);
+    return true;
+  });
+
+  // nœuds
+  for (const p of pts) {
+    const pulse = 1 + Math.sin(t * .03 + p.x) * .25;
+    const s = (6 + p.z * 16) * pulse;
+    ctx.globalAlpha = .35 + p.z * .65;
+    ctx.drawImage(p.hue ? glowB : glowA, p.px - s / 2, p.py - s / 2, s, s);
+  }
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+
+  // pings (anneaux qui s'étendent)
+  pings = pings.filter((pg) => {
+    pg.r += 1.2;
+    const al = 1 - pg.r / 60; if (al <= 0) return false;
+    ctx.strokeStyle = `rgba(${A},${al * .6})`; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(pg.p.px, pg.p.py, pg.r, 0, Math.PI * 2); ctx.stroke();
+    return true;
+  });
+  // ondes de clic
+  waves = waves.filter((w) => {
+    w.r += 9;
+    const al = 1 - w.r / Math.max(W, H); if (al <= 0) return false;
+    ctx.strokeStyle = `rgba(${B},${al * .5})`; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(w.x, w.y, w.r, 0, Math.PI * 2); ctx.stroke();
+    return true;
+  });
+
+  requestAnimationFrame(network);
+}
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) network();
+
+/* ---------- 3. Apparition des blocs au défilement ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('visible');
+
+    // barres de compétences
+    e.target.querySelectorAll('.bar i').forEach((b) => (b.style.width = b.dataset.level + '%'));
+
+    // compteurs
+    const num = e.target.querySelector('.num');
+    if (num && !num.dataset.done) {
+      num.dataset.done = 1;
+      const target = +num.dataset.target, start = performance.now(), dur = 1800;
+      (function tick(t) {
+        const k = Math.min((t - start) / dur, 1);
+        num.textContent = Math.round(target * (1 - Math.pow(1 - k, 3)));
+        if (k < 1) requestAnimationFrame(tick);
+      })(start);
+    }
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => io.observe(el));
+
+/* Petit décalage en cascade pour les cartes d'une même grille */
+document.querySelectorAll('.skills-grid, .certs, .counters').forEach((grid) => {
+  [...grid.children].forEach((el, i) => (el.style.transitionDelay = i * 0.12 + 's'));
+});
+
+/* ---------- 4. En-tête qui se compacte + lien actif ---------- */
+const header = document.getElementById('header');
+const links = document.querySelectorAll('.nav a');
+const sections = [...links].map((a) => document.querySelector(a.getAttribute('href')));
+addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', scrollY > 60);
+  let current = -1;
+  sections.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.4) current = i; });
+  links.forEach((a, i) => a.classList.toggle('active', i === current));
+});
+
+/* ---------- 5. Menu mobile ---------- */
+const burger = document.getElementById('burger');
+const nav = document.getElementById('nav');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  nav.classList.toggle('open');
+});
+links.forEach((a) => a.addEventListener('click', () => {
+  burger.classList.remove('open'); nav.classList.remove('open');
+}));
+
+
+/* ---------- 6. Effet image fixe : zoom + assombrissement ---------- */
+const curtainMedia = document.getElementById('curtainMedia');
+const curtainText = document.getElementById('curtainText');
+const curtainShade = document.getElementById('curtainShade');
+const curtainWrap = document.querySelector('.curtain-wrap');
+
+/* ---------- 7. Galerie Making Of : rangées qui glissent ---------- */
+const moSection = document.getElementById('coulisses');
+const moRows = document.querySelectorAll('.mo-row');
+
+const hero = document.getElementById('accueil');
+const about = document.getElementById('apropos');
+const curtainKicker = curtainText.querySelector('.kicker');
+const curtainTitle = curtainText.querySelector('.curtain-title');
+const clamp = (v, a = 0, b = 1) => Math.min(Math.max(v, a), b);
+const ease = (x) => 1 - Math.pow(1 - x, 3);
+let smooth = scrollY; // scroll « lissé » pour des mouvements plus naturels
+
+const isSmall = matchMedia('(max-width: 820px)').matches;
+function onScrollFx() {
+  smooth += (scrollY - smooth) * 0.09;
+  if (Math.abs(scrollY - smooth) < 0.1) smooth = scrollY;
+  const lag = scrollY - smooth; // décalage entre le vrai scroll et le scroll lissé
+
+  // 1) L'accueil s'efface en douceur (flou + recul)
+  const hp = clamp(smooth / innerHeight);
+  hero.style.opacity = 1 - ease(hp) * 1.1;
+  hero.style.transform = `translateY(${hp * innerHeight * 0.35}px) scale(${1 - hp * 0.08})`;
+  if (!isSmall) hero.style.filter = `blur(${hp * 8}px)`; // flou désactivé sur mobile (plus fluide)
+
+  // 2) L'image arrive : fondu + dézoom + titre qui se resserre
+  const r = curtainWrap.getBoundingClientRect();
+  const top = r.top + lag;
+  const enter = ease(clamp(1 - top / innerHeight));      // 0 → 1 quand l'image arrive
+  const k = clamp(-top / innerHeight);                    // 0 → 1 quand À propos passe dessus
+  curtainMedia.style.opacity = enter;
+  curtainMedia.style.setProperty('--f', (1 - enter).toFixed(3));
+  curtainMedia.style.transform = `scale(${1.3 - enter * 0.3 + k * 0.15})`;
+  curtainShade.style.opacity = k * 0.85;
+  curtainTitle.style.letterSpacing = `${(1 - enter) * 0.25}em`;
+  curtainTitle.style.filter = `blur(${(1 - enter) * 12}px)`;
+  curtainKicker.style.letterSpacing = `${5 + (1 - enter) * 20}px`;
+  curtainText.style.transform = `translateY(${(1 - enter) * 80 - k * 140}px) scale(${1 - k * 0.12})`;
+  curtainText.style.opacity = enter - k * 1.3;
+
+  // 3) Le panneau À propos : coins arrondis qui s'aplatissent en recouvrant l'image
+  about.style.setProperty('--r', `${(1 - k) * 56}px`);
+
+  // 4) Galerie Making Of
+  const m = moSection.getBoundingClientRect();
+  const prog = (innerHeight - (m.top + lag)) / (innerHeight + m.height);
+  moRows.forEach((row) => {
+    const span = row.scrollWidth / 2 - innerWidth * 0.5;
+    const x = +row.dataset.speed < 0 ? -prog * span * 0.6 : -span * 0.6 + prog * span * 0.6;
+    row.style.transform = `translate3d(${x}px,0,0)`;
+  });
+
+  requestAnimationFrame(onScrollFx);
+}
+onScrollFx();
+</script>
+</body>
+</html>
